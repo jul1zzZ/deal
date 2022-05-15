@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Хранилище prodyktModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="user">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="login" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="password" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="инсталляция">
+    <Key>
+      <PropertyRef Name="код_пользователя" />
+      <PropertyRef Name="код_продукта" />
+    </Key>
+    <Property Name="код_пользователя" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="код_продукта" Type="int" Nullable="false" />
+    <Property Name="стоимость_инсталляции" Type="money" Nullable="false" />
+    <Property Name="дата_инсталляции" Type="date" Nullable="false" />
+    <Property Name="дата_деинсталляции" Type="date" Nullable="false" />
+    <Property Name="кол-во_лицензий" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="пользователь">
+    <Key>
+      <PropertyRef Name="код_пользователя" />
+    </Key>
+    <Property Name="код_пользователя" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="название_пользователя" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="регион" Type="nvarchar" MaxLength="100" Nullable="false" />
+  </EntityType>
+  <EntityType Name="прикладная область">
+    <Key>
+      <PropertyRef Name="код_прикл_области" />
+    </Key>
+    <Property Name="код_прикл_области" Type="char" MaxLength="2" Nullable="false" />
+    <Property Name="прикладная_обсласть" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="программный продукт">
+    <Key>
+      <PropertyRef Name="код_продукта" />
+    </Key>
+    <Property Name="код_продукта" Type="int" Nullable="false" />
+    <Property Name="название_продукта" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="версия" Type="char" MaxLength="5" Nullable="false" />
+    <Property Name="дата_выпуска" Type="date" Nullable="false" />
+    <Property Name="код_прикл_области" Type="char" MaxLength="2" Nullable="false" />
+    <Property Name="стоимость_лицензии" Type="decimal" Precision="8" Scale="2" />
+  </EntityType>
+  <Association Name="FK_инсталляция_пользователь">
+    <End Role="пользователь" Type="Self.пользователь" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="инсталляция" Type="Self.инсталляция" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="пользователь">
+        <PropertyRef Name="код_пользователя" />
+      </Principal>
+      <Dependent Role="инсталляция">
+        <PropertyRef Name="код_пользователя" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_инсталляция_программный продукт">
+    <End Role="программный продукт" Type="Self.программный продукт" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="инсталляция" Type="Self.инсталляция" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="программный продукт">
+        <PropertyRef Name="код_продукта" />
+      </Principal>
+      <Dependent Role="инсталляция">
+        <PropertyRef Name="код_продукта" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_программный продукт_прикладная область">
+    <End Role="прикладная область" Type="Self.прикладная область" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="программный продукт" Type="Self.программный продукт" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="прикладная область">
+        <PropertyRef Name="код_прикл_области" />
+      </Principal>
+      <Dependent Role="программный продукт">
+        <PropertyRef Name="код_прикл_области" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="Хранилище prodyktModelContainer">
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="user" EntityType="Self.user" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="инсталляция" EntityType="Self.инсталляция" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="пользователь" EntityType="Self.пользователь" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="прикладная область" EntityType="Self.прикладная область" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="программный продукт" EntityType="Self.программный продукт" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_инсталляция_пользователь" Association="Self.FK_инсталляция_пользователь">
+      <End Role="пользователь" EntitySet="пользователь" />
+      <End Role="инсталляция" EntitySet="инсталляция" />
+    </AssociationSet>
+    <AssociationSet Name="FK_инсталляция_программный продукт" Association="Self.FK_инсталляция_программный продукт">
+      <End Role="программный продукт" EntitySet="программный продукт" />
+      <End Role="инсталляция" EntitySet="инсталляция" />
+    </AssociationSet>
+    <AssociationSet Name="FK_программный продукт_прикладная область" Association="Self.FK_программный продукт_прикладная область">
+      <End Role="прикладная область" EntitySet="прикладная область" />
+      <End Role="программный продукт" EntitySet="программный продукт" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

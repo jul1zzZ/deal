@@ -1,0 +1,345 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище prodyktModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="user">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="login" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="password" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="инсталляция">
+          <Key>
+            <PropertyRef Name="код_пользователя" />
+            <PropertyRef Name="код_продукта" />
+          </Key>
+          <Property Name="код_пользователя" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="код_продукта" Type="int" Nullable="false" />
+          <Property Name="стоимость_инсталляции" Type="money" Nullable="false" />
+          <Property Name="дата_инсталляции" Type="date" Nullable="false" />
+          <Property Name="дата_деинсталляции" Type="date" Nullable="false" />
+          <Property Name="кол-во_лицензий" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="пользователь">
+          <Key>
+            <PropertyRef Name="код_пользователя" />
+          </Key>
+          <Property Name="код_пользователя" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="название_пользователя" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="регион" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="прикладная область">
+          <Key>
+            <PropertyRef Name="код_прикл_области" />
+          </Key>
+          <Property Name="код_прикл_области" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="прикладная_обсласть" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="программный продукт">
+          <Key>
+            <PropertyRef Name="код_продукта" />
+          </Key>
+          <Property Name="код_продукта" Type="int" Nullable="false" />
+          <Property Name="название_продукта" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="версия" Type="char" MaxLength="5" Nullable="false" />
+          <Property Name="дата_выпуска" Type="date" Nullable="false" />
+          <Property Name="код_прикл_области" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="стоимость_лицензии" Type="decimal" Precision="8" Scale="2" />
+        </EntityType>
+        <Association Name="FK_инсталляция_пользователь">
+          <End Role="пользователь" Type="Self.пользователь" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="инсталляция" Type="Self.инсталляция" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="пользователь">
+              <PropertyRef Name="код_пользователя" />
+            </Principal>
+            <Dependent Role="инсталляция">
+              <PropertyRef Name="код_пользователя" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_инсталляция_программный продукт">
+          <End Role="программный продукт" Type="Self.программный продукт" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="инсталляция" Type="Self.инсталляция" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="программный продукт">
+              <PropertyRef Name="код_продукта" />
+            </Principal>
+            <Dependent Role="инсталляция">
+              <PropertyRef Name="код_продукта" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_программный продукт_прикладная область">
+          <End Role="прикладная область" Type="Self.прикладная область" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="программный продукт" Type="Self.программный продукт" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="прикладная область">
+              <PropertyRef Name="код_прикл_области" />
+            </Principal>
+            <Dependent Role="программный продукт">
+              <PropertyRef Name="код_прикл_области" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище prodyktModelContainer">
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="user" EntityType="Self.user" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="инсталляция" EntityType="Self.инсталляция" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="пользователь" EntityType="Self.пользователь" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="прикладная область" EntityType="Self.прикладная область" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="программный продукт" EntityType="Self.программный продукт" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_инсталляция_пользователь" Association="Self.FK_инсталляция_пользователь">
+            <End Role="пользователь" EntitySet="пользователь" />
+            <End Role="инсталляция" EntitySet="инсталляция" />
+          </AssociationSet>
+          <AssociationSet Name="FK_инсталляция_программный продукт" Association="Self.FK_инсталляция_программный продукт">
+            <End Role="программный продукт" EntitySet="программный продукт" />
+            <End Role="инсталляция" EntitySet="инсталляция" />
+          </AssociationSet>
+          <AssociationSet Name="FK_программный продукт_прикладная область" Association="Self.FK_программный продукт_прикладная область">
+            <End Role="прикладная область" EntitySet="прикладная область" />
+            <End Role="программный продукт" EntitySet="программный продукт" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="prodyktModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="user">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="login" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="инсталляция">
+          <Key>
+            <PropertyRef Name="код_пользователя" />
+            <PropertyRef Name="код_продукта" />
+          </Key>
+          <Property Name="код_пользователя" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="код_продукта" Type="Int32" Nullable="false" />
+          <Property Name="стоимость_инсталляции" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="дата_инсталляции" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="дата_деинсталляции" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="кол_во_лицензий" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="пользователь" Relationship="Self.FK_инсталляция_пользователь" FromRole="инсталляция" ToRole="пользователь" />
+          <NavigationProperty Name="программный_продукт" Relationship="Self.FK_инсталляция_программный_продукт" FromRole="инсталляция" ToRole="программный_продукт" />
+        </EntityType>
+        <EntityType Name="пользователь">
+          <Key>
+            <PropertyRef Name="код_пользователя" />
+          </Key>
+          <Property Name="код_пользователя" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="название_пользователя" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="регион" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="инсталляция" Relationship="Self.FK_инсталляция_пользователь" FromRole="пользователь" ToRole="инсталляция" />
+        </EntityType>
+        <EntityType Name="прикладная_область">
+          <Key>
+            <PropertyRef Name="код_прикл_области" />
+          </Key>
+          <Property Name="код_прикл_области" Type="String" MaxLength="2" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="прикладная_обсласть" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="программный_продукт" Relationship="Self.FK_программный_продукт_прикладная_область" FromRole="прикладная_область" ToRole="программный_продукт" />
+        </EntityType>
+        <EntityType Name="программный_продукт">
+          <Key>
+            <PropertyRef Name="код_продукта" />
+          </Key>
+          <Property Name="код_продукта" Type="Int32" Nullable="false" />
+          <Property Name="название_продукта" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="версия" Type="String" MaxLength="5" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="дата_выпуска" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="код_прикл_области" Type="String" MaxLength="2" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="стоимость_лицензии" Type="Decimal" Precision="8" Scale="2" />
+          <NavigationProperty Name="инсталляция" Relationship="Self.FK_инсталляция_программный_продукт" FromRole="программный_продукт" ToRole="инсталляция" />
+          <NavigationProperty Name="прикладная_область" Relationship="Self.FK_программный_продукт_прикладная_область" FromRole="программный_продукт" ToRole="прикладная_область" />
+        </EntityType>
+        <Association Name="FK_инсталляция_пользователь">
+          <End Role="пользователь" Type="Self.пользователь" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="инсталляция" Type="Self.инсталляция" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="пользователь">
+              <PropertyRef Name="код_пользователя" />
+            </Principal>
+            <Dependent Role="инсталляция">
+              <PropertyRef Name="код_пользователя" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_инсталляция_программный_продукт">
+          <End Role="программный_продукт" Type="Self.программный_продукт" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="инсталляция" Type="Self.инсталляция" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="программный_продукт">
+              <PropertyRef Name="код_продукта" />
+            </Principal>
+            <Dependent Role="инсталляция">
+              <PropertyRef Name="код_продукта" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_программный_продукт_прикладная_область">
+          <End Role="прикладная_область" Type="Self.прикладная_область" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="программный_продукт" Type="Self.программный_продукт" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="прикладная_область">
+              <PropertyRef Name="код_прикл_области" />
+            </Principal>
+            <Dependent Role="программный_продукт">
+              <PropertyRef Name="код_прикл_области" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="prodyktEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <EntitySet Name="users" EntityType="Self.user" />
+          <EntitySet Name="инсталляция" EntityType="Self.инсталляция" />
+          <EntitySet Name="пользователь" EntityType="Self.пользователь" />
+          <EntitySet Name="прикладная_область" EntityType="Self.прикладная_область" />
+          <EntitySet Name="программный_продукт" EntityType="Self.программный_продукт" />
+          <AssociationSet Name="FK_инсталляция_пользователь" Association="Self.FK_инсталляция_пользователь">
+            <End Role="пользователь" EntitySet="пользователь" />
+            <End Role="инсталляция" EntitySet="инсталляция" />
+          </AssociationSet>
+          <AssociationSet Name="FK_инсталляция_программный_продукт" Association="Self.FK_инсталляция_программный_продукт">
+            <End Role="программный_продукт" EntitySet="программный_продукт" />
+            <End Role="инсталляция" EntitySet="инсталляция" />
+          </AssociationSet>
+          <AssociationSet Name="FK_программный_продукт_прикладная_область" Association="Self.FK_программный_продукт_прикладная_область">
+            <End Role="прикладная_область" EntitySet="прикладная_область" />
+            <End Role="программный_продукт" EntitySet="программный_продукт" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище prodyktModelContainer" CdmEntityContainer="prodyktEntities">
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="prodyktModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="users">
+            <EntityTypeMapping TypeName="prodyktModel.user">
+              <MappingFragment StoreEntitySet="user">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="login" ColumnName="login" />
+                <ScalarProperty Name="password" ColumnName="password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="инсталляция">
+            <EntityTypeMapping TypeName="prodyktModel.инсталляция">
+              <MappingFragment StoreEntitySet="инсталляция">
+                <ScalarProperty Name="код_пользователя" ColumnName="код_пользователя" />
+                <ScalarProperty Name="код_продукта" ColumnName="код_продукта" />
+                <ScalarProperty Name="стоимость_инсталляции" ColumnName="стоимость_инсталляции" />
+                <ScalarProperty Name="дата_инсталляции" ColumnName="дата_инсталляции" />
+                <ScalarProperty Name="дата_деинсталляции" ColumnName="дата_деинсталляции" />
+                <ScalarProperty Name="кол_во_лицензий" ColumnName="кол-во_лицензий" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="пользователь">
+            <EntityTypeMapping TypeName="prodyktModel.пользователь">
+              <MappingFragment StoreEntitySet="пользователь">
+                <ScalarProperty Name="код_пользователя" ColumnName="код_пользователя" />
+                <ScalarProperty Name="название_пользователя" ColumnName="название_пользователя" />
+                <ScalarProperty Name="регион" ColumnName="регион" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="прикладная_область">
+            <EntityTypeMapping TypeName="prodyktModel.прикладная_область">
+              <MappingFragment StoreEntitySet="прикладная область">
+                <ScalarProperty Name="код_прикл_области" ColumnName="код_прикл_области" />
+                <ScalarProperty Name="прикладная_обсласть" ColumnName="прикладная_обсласть" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="программный_продукт">
+            <EntityTypeMapping TypeName="prodyktModel.программный_продукт">
+              <MappingFragment StoreEntitySet="программный продукт">
+                <ScalarProperty Name="код_продукта" ColumnName="код_продукта" />
+                <ScalarProperty Name="название_продукта" ColumnName="название_продукта" />
+                <ScalarProperty Name="версия" ColumnName="версия" />
+                <ScalarProperty Name="дата_выпуска" ColumnName="дата_выпуска" />
+                <ScalarProperty Name="код_прикл_области" ColumnName="код_прикл_области" />
+                <ScalarProperty Name="стоимость_лицензии" ColumnName="стоимость_лицензии" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
